@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 @Configuration
 public class ActivitiConfiguration {
 
-    private Logger logger = LoggerFactory.getLogger(ActivitiConfiguration.class);
+    private final Logger logger = LoggerFactory.getLogger(ActivitiConfiguration.class);
 
     @Bean
     public UserDetailsService userDetailsService() {
 
         InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
 
-        /**
-         * 配置默认账号：账号-密码-权限
-         * 角色ROLE_ACTIVITI_USER可以调用Activiti官方API
+        /*
+          配置默认账号：账号-密码-权限
+          角色ROLE_ACTIVITI_USER可以调用Activiti官方API
          */
         String[][] userGroupAndRoles = {
                 {"admin", "password", "ROLE_ACTIVITI_ADMIN", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam"},
@@ -41,7 +41,7 @@ public class ActivitiConfiguration {
             List<String> authorities = Arrays.asList(Arrays.copyOfRange(user, 2, user.length));
             logger.info("> Registering new user: " + user[0] + " with the following Authorities[" + authorities + "]");
             inMemoryUserDetailsManager.createUser(new User(user[0], passwordEncoder().encode(user[1]),
-                    authorities.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList())));
+                    authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())));
         }
 
         return inMemoryUserDetailsManager;
