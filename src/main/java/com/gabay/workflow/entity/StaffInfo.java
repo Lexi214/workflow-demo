@@ -1,11 +1,14 @@
 package com.gabay.workflow.entity;
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
 @Data
-public class StaffInfo implements Serializable {
+public class StaffInfo implements UserDetails {
 
     private Long id;
 
@@ -19,4 +22,30 @@ public class StaffInfo implements Serializable {
 
     private String username;
 
+    private Set<GrantedAuthority> grantedAuthoritySet;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return grantedAuthoritySet;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
