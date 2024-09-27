@@ -2,6 +2,7 @@ package com.gabay.workflow.config;
 
 import com.gabay.workflow.auth.CustomAuthenticationFailureHandler;
 import com.gabay.workflow.auth.CustomAuthenticationSuccessHandler;
+import com.gabay.workflow.auth.CustomLogoutSuccessHandler;
 import com.gabay.workflow.auth.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,11 +28,11 @@ public class WorkflowSecurityConfiguration extends WebSecurityConfigurerAdapter 
     @Autowired
     CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
+    @Autowired
+    CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
     /**
      * 用户身份认证
-     *
-     * @param auth
-     * @throws Exception
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,6 +48,7 @@ public class WorkflowSecurityConfiguration extends WebSecurityConfigurerAdapter 
         http.formLogin()
                 .loginProcessingUrl("/login")
                 .successHandler(customAuthenticationSuccessHandler).failureHandler(customAuthenticationFailureHandler)
+                .and().logout().logoutUrl("logout").logoutSuccessHandler(customLogoutSuccessHandler)
                 .and().authorizeRequests().anyRequest().authenticated()
                 .and().csrf().disable();
     }
